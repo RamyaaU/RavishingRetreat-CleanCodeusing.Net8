@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RavishingVilla.Domain.Entities;
 
 namespace RavishingVilla.Infrastructure.Data
 {
@@ -8,5 +9,7 @@ namespace RavishingVilla.Infrastructure.Data
         {
             
         }
+
+        public DbSet<Villa> Villas { get; set; }
     }
 }
