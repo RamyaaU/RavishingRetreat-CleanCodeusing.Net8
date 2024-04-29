@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RavishingVilla.Domain.Entities;
 using RavishingVilla.Infrastructure.Data;
 
 namespace RavishingVilla.Web.Controllers
@@ -21,6 +22,18 @@ namespace RavishingVilla.Web.Controllers
         public IActionResult Create()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Villa villa)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Villas.Add(villa);
+                _context.SaveChanges();
+                return RedirectToAction("Index", "Villa");
+            }
+            return View(villa);
         }
     }
 }
