@@ -27,7 +27,7 @@ namespace RavishingVilla.Web.Controllers
         [HttpPost]
         public IActionResult Create(Villa villa)
         {
-            if(villa.Name == villa.Description)
+            if (villa.Name == villa.Description)
             {
                 //name is teh field and it is case insensitive 
                 ModelState.AddModelError("name", "The description cannot exactly match the Name field");
@@ -39,6 +39,17 @@ namespace RavishingVilla.Web.Controllers
                 return RedirectToAction("Index", "Villa");
             }
             return View(villa);
+        }
+
+        public IActionResult Update(int villaId)
+        {
+            Villa? obj = _context.Villas.FirstOrDefault(x => x.Id == villaId);
+            if (obj == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            return View(obj);
         }
     }
 }
