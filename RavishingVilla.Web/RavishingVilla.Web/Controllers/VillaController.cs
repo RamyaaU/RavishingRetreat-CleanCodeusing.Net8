@@ -36,6 +36,7 @@ namespace RavishingVilla.Web.Controllers
             {
                 _context.Villas.Add(villa);
                 _context.SaveChanges();
+                TempData["success"] = "The villa has been created successfully";
                 return RedirectToAction("Index", "Villa");
             }
             return View(villa);
@@ -59,6 +60,7 @@ namespace RavishingVilla.Web.Controllers
             {
                 _context.Villas.Update(obj);
                 _context.SaveChanges();
+                TempData["success"] = "The villa has been updated successfully";
                 return RedirectToAction("Index");
             }
             return View();
@@ -83,8 +85,10 @@ namespace RavishingVilla.Web.Controllers
             {
                 _context.Villas.Remove(objFromDb);
                 _context.SaveChanges();
+                TempData["success"] = "The villa has been deleted successfully.";
                 return RedirectToAction("Index");
             }
+            TempData["error"] = "The villa could not be deleted";
             return View();
         }
     }
