@@ -27,6 +27,7 @@ namespace RavishingVilla.Web.Controllers
         [HttpPost]
         public IActionResult Create(VillaNumber villa)
         {
+            //ModelState.Remove("Villa");
             if (ModelState.IsValid)
             {
                 _context.VillaNumbers.Add(villa);
