@@ -23,12 +23,15 @@ namespace RavishingVilla.Web.Controllers
 
         public IActionResult Create()
         {
+            //list of villas
             IEnumerable<SelectListItem> list = _context.Villas.ToList().Select(u => new SelectListItem
             {
                 Text = u.Name,
                 Value = u.Id.ToString(),
 
             });
+
+            ViewData["VillaList"] = list; 
             return View();
         }
 
