@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using RavishingVilla.Domain.Entities;
 using RavishingVilla.Infrastructure.Data;
+using System.Linq;
 
 namespace RavishingVilla.Web.Controllers
 {
@@ -21,6 +23,12 @@ namespace RavishingVilla.Web.Controllers
 
         public IActionResult Create()
         {
+            IEnumerable<SelectListItem> list = _context.Villas.ToList().Select(u => new SelectListItem
+            {
+                Text = u.Name,
+                Value = u.Id.ToString(),
+
+            });
             return View();
         }
 
@@ -66,7 +74,7 @@ namespace RavishingVilla.Web.Controllers
         {
             Villa? obj = _context.Villas.FirstOrDefault(x => x.Id == villaId);
             if (obj is null)
-            { 
+            {
                 return RedirectToAction("Error", "Home");
             }
 
