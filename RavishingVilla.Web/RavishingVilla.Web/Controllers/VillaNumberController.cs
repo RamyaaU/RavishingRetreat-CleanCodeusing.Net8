@@ -31,7 +31,11 @@ namespace RavishingVilla.Web.Controllers
 
             });
 
-            ViewData["VillaList"] = list; 
+            //view data code
+            //ViewData["VillaList"] = list;
+
+            //view bag code 
+            ViewBag.VillaList = list;
             return View();
         }
 
