@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using RavishingVilla.Domain.Entities;
 using RavishingVilla.Infrastructure.Data;
+using RavishingVilla.Web.ViewModels;
 using System.Linq;
 
 namespace RavishingVilla.Web.Controllers
@@ -17,26 +19,36 @@ namespace RavishingVilla.Web.Controllers
 
         public IActionResult Index()
         {
-            var villaNumbers = _context.VillaNumbers.ToList();
+            var villaNumbers = _context.VillaNumbers.Include(u => u.Villa).ToList();
             return View(villaNumbers);
         }
 
         public IActionResult Create()
         {
             //list of villas
-            IEnumerable<SelectListItem> list = _context.Villas.ToList().Select(u => new SelectListItem
+            //IEnumerable<SelectListItem> list = _context.Villas.ToList().Select(u => new SelectListItem
+            //{
+            //    Text = u.Name,
+            //    Value = u.Id.ToString(),
+
+            //});
+
+            VillaNumberVM villaNumber = new()
             {
-                Text = u.Name,
-                Value = u.Id.ToString(),
+                VillaList = _context.Villas.ToList().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString(),
 
-            });
+                })
+            };
 
-            //view data code
-            //ViewData["VillaList"] = list;
+            ////view data code
+            ////ViewData["VillaList"] = list;
 
-            //view bag code 
-            ViewBag.VillaList = list;
-            return View();
+            ////view bag code 
+            //ViewBag.VillaList = list;
+            return View(villaNumber);
         }
 
         [HttpPost]
