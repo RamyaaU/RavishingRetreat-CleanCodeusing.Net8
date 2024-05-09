@@ -25,6 +25,8 @@ namespace RavishingVilla.Web.Controllers
 
         public IActionResult Create()
         {
+
+            
             //list of villas
             //IEnumerable<SelectListItem> list = _context.Villas.ToList().Select(u => new SelectListItem
             //{
@@ -52,17 +54,35 @@ namespace RavishingVilla.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(VillaNumber villa)
+        public IActionResult Create(VillaNumberVM villa)
         {
+
+            bool existingVillaNumber = _context.VillaNumbers.Any(u => u.Villa_Number == villa.VillaNumber.Villa_Number);
+
+
             //ModelState.Remove("Villa");
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !existingVillaNumber)
             {
-                _context.VillaNumbers.Add(villa);
+                _context.VillaNumbers.Add(villa.VillaNumber);
                 _context.SaveChanges();
                 TempData["success"] = "The villa number has been created successfully";
                 return RedirectToAction("Index", "Villa");
             }
+
+            if(existingVillaNumber)
+            {
+                TempData["error"] = "The villa number already exists";
+            }
+
+            villa.VillaList = _context.Villas.ToList().Select(u => new SelectListItem
+            {
+                Text = u.Name,
+                Value = u.Id.ToString(),
+            });
+
             return View(villa);
+
+
         }
 
         public IActionResult Update(int villaId)
