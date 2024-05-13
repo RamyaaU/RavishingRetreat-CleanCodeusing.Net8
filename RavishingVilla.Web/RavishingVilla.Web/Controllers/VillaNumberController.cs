@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using RavishingVilla.Domain.Entities;
 using RavishingVilla.Infrastructure.Data;
 using RavishingVilla.Web.ViewModels;
-using System.Linq;
 
 namespace RavishingVilla.Web.Controllers
 {
@@ -85,15 +84,25 @@ namespace RavishingVilla.Web.Controllers
 
         }
 
-        public IActionResult Update(int villaId)
+        public IActionResult Update(int villaNumberId)
         {
-            Villa? obj = _context.Villas.FirstOrDefault(x => x.Id == villaId);
-            if (obj == null)
+            VillaNumberVM villaNumberVM = new()
+            {
+                VillaList = _context.Villas.ToList().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString(),
+                }),
+
+                VillaNumber = _context.VillaNumbers.FirstOrDefault(u => u.Villa_Number == villaNumberId)
+            };
+
+            if (villaNumberVM.VillaNumber == null)
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            return View(obj);
+            return View(villaNumberVM);
         }
 
         [HttpPost]
