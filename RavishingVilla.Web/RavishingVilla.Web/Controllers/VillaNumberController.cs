@@ -127,24 +127,35 @@ namespace RavishingVilla.Web.Controllers
             return View(villaNumberVM);
         }
 
-        public IActionResult Delete(int villaId)
+        public IActionResult Delete(int villaNumberId)
         {
-            Villa? obj = _context.Villas.FirstOrDefault(x => x.Id == villaId);
-            if (obj is null)
+            VillaNumberVM villaNumberVM = new()
+            {
+                VillaList = _context.Villas.ToList().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString(),
+                }),
+
+                VillaNumber = _context.VillaNumbers.FirstOrDefault(u => u.Villa_Number == villaNumberId)
+            };
+
+            if (villaNumberVM.VillaNumber == null)
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            return View(obj);
+            return View(villaNumberVM);
         }
 
+
         [HttpPost]
-        public IActionResult Delete(Villa obj)
+        public IActionResult Delete(VillaNumberVM villaNumberVM)
         {
-            Villa? objFromDb = _context.Villas.FirstOrDefault(u => u.Id == obj.Id);
+            VillaNumber? objFromDb = _context.VillaNumbers.FirstOrDefault(u => u.Villa_Number == villaNumberVM.VillaNumber.Villa_Number);
             if (objFromDb is not null)
             {
-                _context.Villas.Remove(objFromDb);
+                _context.VillaNumbers.Remove(objFromDb);
                 _context.SaveChanges();
                 TempData["success"] = "The villa has been deleted successfully.";
                 return RedirectToAction("Index");
