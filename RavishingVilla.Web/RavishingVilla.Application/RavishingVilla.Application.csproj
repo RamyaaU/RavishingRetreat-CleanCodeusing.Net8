@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RavishingVilla.Domain\RavishingVilla.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

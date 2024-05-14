@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using RavishingVilla.Web.Models;
-using System.Diagnostics;
 
 namespace RavishingVilla.Web.Controllers
 {
