@@ -106,16 +106,25 @@ namespace RavishingVilla.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(Villa obj)
+        public IActionResult Update(VillaNumberVM villaNumberVM)
         {
-            if (ModelState.IsValid && obj.Id > 0)
+            bool existingVillaNumber = _context.VillaNumbers.Any(u => u.Villa_Number == villaNumberVM.VillaNumber.Villa_Number);
+
+            if (ModelState.IsValid)
             {
-                _context.Villas.Update(obj);
+                _context.VillaNumbers.Update(villaNumberVM.VillaNumber);
                 _context.SaveChanges();
-                TempData["success"] = "The villa has been updated successfully";
-                return RedirectToAction("Index");
+                TempData["success"] = "The villa number has been updated successfully";
+                return RedirectToAction("Index", "Villa");
             }
-            return View();
+
+            villaNumberVM.VillaList = _context.Villas.ToList().Select(u => new SelectListItem
+            {
+                Text = u.Name,
+                Value = u.Id.ToString(),
+            });
+
+            return View(villaNumberVM);
         }
 
         public IActionResult Delete(int villaId)
