@@ -8,7 +8,7 @@ namespace RavishingVilla.Application.Common.Interfaces
     {
         IEnumerable<Villa> GetAllVillas(Expression<Func<Villa, bool>>?filter = null, string? includeProperties = null);
 
-        IEnumerable<Villa> GetVilla(Expression<Func<Villa, bool>> filter, string? includeProperties = null);
+        Villa GetVilla(Expression<Func<Villa, bool>> filter, string? includeProperties = null);
 
         void Add(Villa entity);
         void Update(Villa entity);

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RavishingVilla.Application\RavishingVilla.Application.csproj" />
     <ProjectReference Include="..\RavishingVilla.Domain\RavishingVilla.Domain.csproj" />
   </ItemGroup>
 
