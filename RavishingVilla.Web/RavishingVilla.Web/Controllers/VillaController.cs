@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RavishingVilla.Application.Common.Interfaces;
 using RavishingVilla.Domain.Entities;
 using RavishingVilla.Infrastructure.Data;
 
@@ -6,16 +7,16 @@ namespace RavishingVilla.Web.Controllers
 {
     public class VillaController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IVillaRepository _villaRepository;
 
-        public VillaController(ApplicationDbContext context)
+        public VillaController(IVillaRepository villaRepository)
         {
-            _context = context;
+            _villaRepository = villaRepository;
         }
 
         public IActionResult Index()
         {
-            var villas = _context.Villas.ToList();
+            var villas = _villaRepository.GetAllVillas();
             return View(villas);
         }
 
@@ -34,8 +35,8 @@ namespace RavishingVilla.Web.Controllers
             }
             if (ModelState.IsValid)
             {
-                _context.Villas.Add(villa);
-                _context.SaveChanges();
+                _villaRepository.Add(villa);
+                _villaRepository.Save();
                 TempData["success"] = "The villa has been created successfully";
                 return RedirectToAction("Index", "Villa");
             }
@@ -44,7 +45,7 @@ namespace RavishingVilla.Web.Controllers
 
         public IActionResult Update(int villaId)
         {
-            Villa? obj = _context.Villas.FirstOrDefault(x => x.Id == villaId);
+            Villa? obj = _villaRepository.GetVilla(x => x.Id == villaId);
             if (obj == null)
             {
                 return RedirectToAction("Error", "Home");
@@ -58,8 +59,8 @@ namespace RavishingVilla.Web.Controllers
         {
             if (ModelState.IsValid && obj.Id > 0)
             {
-                _context.Villas.Update(obj);
-                _context.SaveChanges();
+                _villaRepository.Update(obj);
+                _villaRepository.Save();
                 TempData["success"] = "The villa has been updated successfully";
                 return RedirectToAction("Index");
             }
@@ -68,7 +69,7 @@ namespace RavishingVilla.Web.Controllers
 
         public IActionResult Delete(int villaId)
         {
-            Villa? obj = _context.Villas.FirstOrDefault(x => x.Id == villaId);
+            Villa? obj = _villaRepository.GetVilla(x => x.Id == villaId);
             if (obj is null)
             { 
                 return RedirectToAction("Error", "Home");
@@ -80,11 +81,11 @@ namespace RavishingVilla.Web.Controllers
         [HttpPost]
         public IActionResult Delete(Villa obj)
         {
-            Villa? objFromDb = _context.Villas.FirstOrDefault(u => u.Id == obj.Id);
+            Villa? objFromDb = _villaRepository.GetVilla(u => u.Id == obj.Id);
             if (objFromDb is not null)
             {
-                _context.Villas.Remove(objFromDb);
-                _context.SaveChanges();
+                _villaRepository.Delete(objFromDb);
+                _villaRepository.Save();
                 TempData["success"] = "The villa has been deleted successfully.";
                 return RedirectToAction("Index");
             }
