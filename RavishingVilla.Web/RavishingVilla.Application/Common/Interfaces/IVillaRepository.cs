@@ -4,17 +4,9 @@ using System.Security.Cryptography;
 
 namespace RavishingVilla.Application.Common.Interfaces
 {
-    public interface IVillaRepository
+    public interface IVillaRepository : IGenericRepository<Villa>
     {
-        IEnumerable<Villa> GetAllVillas(Expression<Func<Villa, bool>>?filter = null, string? includeProperties = null);
-
-        Villa GetVilla(Expression<Func<Villa, bool>> filter, string? includeProperties = null);
-
-        void Add(Villa entity);
         void Update(Villa entity);
-
-        void Delete(Villa entity);
-
         void Save();
     }
 }
