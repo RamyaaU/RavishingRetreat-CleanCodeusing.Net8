@@ -11,10 +11,6 @@ namespace RavishingVilla.Infrastructure.Repository
 
         public IVillaNumberRepository VillaNumber { get; private set; }
 
-        //public IVillaNumberRepository VillaNumberRepository => throw new NotImplementedException();
-
-        //public IVillaRepository VillaRepository => throw new  NotImplementedException();
-
         public UnitOfWork(ApplicationDbContext applicationDbContext)
         {
             _dbContext = applicationDbContext;
