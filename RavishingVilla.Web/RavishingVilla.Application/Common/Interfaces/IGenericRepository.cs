@@ -15,5 +15,7 @@ namespace RavishingVilla.Application.Common.Interfaces
         void Delete(T entity);
 
         //void Save();
+
+        bool Any(Expression<Func<T, bool>> predicate);
     }
 }

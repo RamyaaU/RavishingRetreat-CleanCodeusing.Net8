@@ -63,5 +63,10 @@ namespace RavishingVilla.Infrastructure.Repository
 
             return query.FirstOrDefault();
         }
+
+        public bool Any(Expression<Func<T, bool>> predicate)
+        {
+            return dbSet.Any(predicate);
+        }
     }
 }

@@ -1,31 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using RavishingVilla.Application.Common.Interfaces;
 using RavishingVilla.Domain.Entities;
-using RavishingVilla.Infrastructure.Data;
 using RavishingVilla.Web.ViewModels;
 
 namespace RavishingVilla.Web.Controllers
 {
     public class VillaNumberController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public VillaNumberController(ApplicationDbContext context)
+        public VillaNumberController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            var villaNumbers = _context.VillaNumbers.Include(u => u.Villa).ToList();
+            var villaNumbers = _unitOfWork.VillaNumber.GetAllVillas(includeProperties: "Villa");
+            //var villaNumbers = _context.VillaNumbers.Include(u => u.Villa).ToList();
             return View(villaNumbers);
         }
 
         public IActionResult Create()
         {
-
-            
             //list of villas
             //IEnumerable<SelectListItem> list = _context.Villas.ToList().Select(u => new SelectListItem
             //{
@@ -36,7 +34,7 @@ namespace RavishingVilla.Web.Controllers
 
             VillaNumberVM villaNumber = new()
             {
-                VillaList = _context.Villas.ToList().Select(u => new SelectListItem
+                VillaList = _unitOfWork.Villa.GetAllVillas().Select(u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.Id.ToString(),
@@ -56,45 +54,42 @@ namespace RavishingVilla.Web.Controllers
         public IActionResult Create(VillaNumberVM villa)
         {
 
-            bool existingVillaNumber = _context.VillaNumbers.Any(u => u.Villa_Number == villa.VillaNumber.Villa_Number);
-
+            bool existingVillaNumber = _unitOfWork.VillaNumber.Any(u => u.Villa_Number == villa.VillaNumber.Villa_Number);
 
             //ModelState.Remove("Villa");
             if (ModelState.IsValid && !existingVillaNumber)
             {
-                _context.VillaNumbers.Add(villa.VillaNumber);
-                _context.SaveChanges();
+                _unitOfWork.VillaNumber.Add(villa.VillaNumber);
+                _unitOfWork.Save();
                 TempData["success"] = "The villa number has been created successfully";
                 return RedirectToAction("Index", "Villa");
             }
 
-            if(existingVillaNumber)
+            if (existingVillaNumber)
             {
                 TempData["error"] = "The villa number already exists";
             }
 
-            villa.VillaList = _context.Villas.ToList().Select(u => new SelectListItem
+            villa.VillaList = _unitOfWork.Villa.GetAllVillas().Select(u => new SelectListItem
             {
                 Text = u.Name,
                 Value = u.Id.ToString(),
             });
 
             return View(villa);
-
-
         }
 
         public IActionResult Update(int villaNumberId)
         {
             VillaNumberVM villaNumberVM = new()
             {
-                VillaList = _context.Villas.ToList().Select(u => new SelectListItem
+                VillaList = _unitOfWork.Villa.GetAllVillas().ToList().Select(u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.Id.ToString(),
                 }),
 
-                VillaNumber = _context.VillaNumbers.FirstOrDefault(u => u.Villa_Number == villaNumberId)
+                VillaNumber = _unitOfWork.VillaNumber.GetVilla(u => u.Villa_Number == villaNumberId)
             };
 
             if (villaNumberVM.VillaNumber == null)
@@ -108,17 +103,17 @@ namespace RavishingVilla.Web.Controllers
         [HttpPost]
         public IActionResult Update(VillaNumberVM villaNumberVM)
         {
-            bool existingVillaNumber = _context.VillaNumbers.Any(u => u.Villa_Number == villaNumberVM.VillaNumber.Villa_Number);
+            bool existingVillaNumber = _unitOfWork.VillaNumber.Any(u => u.Villa_Number == villaNumberVM.VillaNumber.Villa_Number);
 
             if (ModelState.IsValid)
             {
-                _context.VillaNumbers.Update(villaNumberVM.VillaNumber);
-                _context.SaveChanges();
+                _unitOfWork.VillaNumber.Update(villaNumberVM.VillaNumber);
+                _unitOfWork.Save();
                 TempData["success"] = "The villa number has been updated successfully";
                 return RedirectToAction("Index", "Villa");
             }
 
-            villaNumberVM.VillaList = _context.Villas.ToList().Select(u => new SelectListItem
+            villaNumberVM.VillaList = _unitOfWork.Villa.GetAllVillas().Select(u => new SelectListItem
             {
                 Text = u.Name,
                 Value = u.Id.ToString(),
@@ -131,13 +126,13 @@ namespace RavishingVilla.Web.Controllers
         {
             VillaNumberVM villaNumberVM = new()
             {
-                VillaList = _context.Villas.ToList().Select(u => new SelectListItem
+                VillaList = _unitOfWork.Villa.GetAllVillas().Select(u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.Id.ToString(),
                 }),
 
-                VillaNumber = _context.VillaNumbers.FirstOrDefault(u => u.Villa_Number == villaNumberId)
+                VillaNumber = _unitOfWork.VillaNumber.GetVilla(u => u.Villa_Number == villaNumberId)
             };
 
             if (villaNumberVM.VillaNumber == null)
@@ -151,11 +146,13 @@ namespace RavishingVilla.Web.Controllers
         [HttpPost]
         public IActionResult Delete(VillaNumberVM villaNumberVM)
         {
-            VillaNumber? objFromDb = _context.VillaNumbers.FirstOrDefault(u => u.Villa_Number == villaNumberVM.VillaNumber.Villa_Number);
+            VillaNumber? objFromDb = _unitOfWork.VillaNumber
+                .GetVilla(u => u.Villa_Number == villaNumberVM.VillaNumber.Villa_Number);
+
             if (objFromDb is not null)
             {
-                _context.VillaNumbers.Remove(objFromDb);
-                _context.SaveChanges();
+                _unitOfWork.VillaNumber.Delete(objFromDb);
+                _unitOfWork.Save();
                 TempData["success"] = "The villa has been deleted successfully.";
                 return RedirectToAction("Index");
             }
