@@ -13,10 +13,10 @@ namespace RavishingVilla.Infrastructure.Repository
             _applicationDbContext = applicationDbContext;
         }
 
-        public void Save()
-        {
-            _applicationDbContext.SaveChanges();
-        }
+        //public void Save()
+        //{
+        //    _applicationDbContext.SaveChanges();
+        //}
 
         public void Update(Villa entity)
         {

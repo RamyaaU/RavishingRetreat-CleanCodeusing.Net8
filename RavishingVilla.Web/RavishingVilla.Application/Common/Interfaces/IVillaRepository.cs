@@ -7,6 +7,6 @@ namespace RavishingVilla.Application.Common.Interfaces
     public interface IVillaRepository : IGenericRepository<Villa>
     {
         void Update(Villa entity);
-        void Save();
+        //void Save();
     }
 }

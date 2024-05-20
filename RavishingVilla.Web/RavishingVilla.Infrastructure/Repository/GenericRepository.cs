@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RavishingVilla.Application.Common.Interfaces;
-using RavishingVilla.Domain.Entities;
 using RavishingVilla.Infrastructure.Data;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace RavishingVilla.Infrastructure.Repository
@@ -30,7 +28,7 @@ namespace RavishingVilla.Infrastructure.Repository
 
         public IEnumerable<T> GetAllVillas(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
-            IQueryable<T> query = dbSet;
+            IQueryable<T> query = dbSet;    
             if (filter != null)
             {
                 query = query.Where(filter);
