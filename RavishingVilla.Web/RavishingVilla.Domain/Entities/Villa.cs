@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RavishingVilla.Domain.Entities
 {
@@ -13,6 +15,10 @@ namespace RavishingVilla.Domain.Entities
         public double Price { get; set; }
         public int Sqft { get; set; }
         public int Occupancy { get; set; }
+
+        [NotMapped]
+        public IFormFile? Image { get; set; }
+
         [Display(Name="Image Url")]
         public string? ImageUrl { get; set; }
         public DateTime? CreatedDate { get; set; }
