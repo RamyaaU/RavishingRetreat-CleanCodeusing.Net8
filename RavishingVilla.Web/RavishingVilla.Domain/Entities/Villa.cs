@@ -18,7 +18,7 @@ namespace RavishingVilla.Domain.Entities
 
         [NotMapped]
         public IFormFile? Image { get; set; }
-
+                                                                                                                                                                                                                                                                           
         [Display(Name="Image Url")]
         public string? ImageUrl { get; set; }
         public DateTime? CreatedDate { get; set; }
