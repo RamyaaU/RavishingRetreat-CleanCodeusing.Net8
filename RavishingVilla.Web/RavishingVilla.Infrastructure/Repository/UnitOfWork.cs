@@ -11,11 +11,14 @@ namespace RavishingVilla.Infrastructure.Repository
 
         public IVillaNumberRepository VillaNumber { get; private set; }
 
+        public IAmenityRepository Amenity { get; private set; }
+
         public UnitOfWork(ApplicationDbContext applicationDbContext)
         {
             _dbContext = applicationDbContext;
             Villa = new VillaRepository(_dbContext);
             VillaNumber = new VillaNumberRepository(_dbContext);
+            Amenity = new AmenityRepository(_dbContext);
         }
 
         public void Save()
